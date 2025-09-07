@@ -15,4 +15,6 @@ jobs:
         run: |
           echo "Triggered by: ${{ github.event.client_payload.source_repo }}"
           echo "Event type: ${{ github.event.action }}"
-          echo "Additional data: ${{ github.event.client_payload.data }}"
+          echo "ref: ${{ github.event.client_payload.data.ref }}"
+          echo "sha: ${{ github.event.client_payload.data.sha }}",
+          echo "pr number: ${{ github.event.client_payload.data.pr_number }}"
