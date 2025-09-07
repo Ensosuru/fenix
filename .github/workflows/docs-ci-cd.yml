@@ -1,0 +1,22 @@
+name: Handle Docs
+
+on:
+  repository_dispatch:
+    types: [trigger-workflow]
+
+jobs:
+  process:
+    if: ${{ github.event.client_payload.source_repo == 'Ensosuru/docs' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Process dispatch
+        run: |
+          echo "Triggered by: ${{ github.event.client_payload.source_repo }}"
+          echo "Event type: ${{ github.event.action }}"
+          echo "ref: ${{ github.event.client_payload.ref }}"
+          echo "sha: ${{ github.event.client_payload.sha }}",
+          echo "other: ${{ github.event.client_payload.other }}",
+          echo "pr number: ${{ github.event.client_payload.pr_number }}"
