@@ -1,6 +1,7 @@
 name: Handle Docs
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [trigger-workflow]
 
@@ -19,4 +20,20 @@ jobs:
           echo "ref: ${{ github.event.client_payload.ref }}"
           echo "sha: ${{ github.event.client_payload.sha }}",
           echo "other: ${{ github.event.client_payload.other }}",
-          echo "pr number: ${{ github.event.client_payload.pr_number }}"
+          echo "pr number: docs${{ github.event.client_payload.pr_number }}"
+
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: docs
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}"
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body: |
+            This workflow was triggered by the docs repo.
