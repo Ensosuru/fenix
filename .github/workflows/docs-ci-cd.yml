@@ -31,6 +31,7 @@ jobs:
           repositories: docs
 
       - name: Comment on issue
+        if: ${{ github.event.client_payload.pr_number != '' || github.event.client_payload.pr_number != null }}
         uses: actions/github-script@v8
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
@@ -41,3 +42,12 @@ jobs:
               repo: 'docs',
               body: 'Comment from github-script action!'
             })
+
+      - name: Run
+        run: |
+          echo "Triggered by: ${{ github.event.client_payload.source_repo }}"
+          echo "Event type: ${{ github.event.action }}"
+          echo "ref: ${{ github.event.client_payload.ref }}"
+          echo "sha: ${{ github.event.client_payload.sha }}",
+          echo "other: ${{ github.event.client_payload.other }}",
+          echo "pr number: docs${{ github.event.client_payload.pr_number }}"
